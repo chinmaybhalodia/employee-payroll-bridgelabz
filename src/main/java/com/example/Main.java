@@ -1,38 +1,20 @@
 package com.example;
 
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to Employee Payroll Service.");
-        Scanner sc = new Scanner(System.in);
 
-        // UC1: creating a payroll system from console
-        EmpPayrollService empPayrollService = new EmpPayrollService();
+        // employee payroll with file I/O
+        EmpPayrollService empPayrollService = new EmpPayrollService("employees.txt");
 
-        // reading inputs from console
-        while (true) {
-            System.out.println("Which operation do you want to perform?");
-            System.out.println("[1] Add Employee");
-            System.out.println("[2] View Employees");
-            System.out.print("Enter your choice (enter 0 to exit): ");
-            int choice = sc.nextInt();
-            sc.nextLine();
-            switch (choice) {
-                case 0:
-                    return;
+        // adding new Employee
+        empPayrollService.addEmployeeToFile(new Employee(1, "Chinmay", 50000));
 
-                case 1:
-                    empPayrollService.readEmpData(sc);
-                    break;
+        // checking number of entries in file
+        System.out.println(empPayrollService.countEmployeesInFile());
 
-                case 2:
-                    System.out.println("\nList of employees: \n" + empPayrollService);
-                    break;
-
-                default:
-                    break;
-            }
-        }
+        // adding one more employee and then counting entries
+        empPayrollService.addEmployeeToFile(new Employee(2, "Person1", 20000));
+        System.out.println(empPayrollService.countEmployeesInFile());
     }
 }

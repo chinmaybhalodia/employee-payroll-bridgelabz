@@ -1,45 +1,48 @@
 package com.example;
 
 import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
 // UC2: performing all file operations
 public class FileOperations {
 
-    public static void main(String[] args) {
-        String DIR_PATH = "dir";
-        String BASE_FILE_PATH = "dir/file";
-
-        // creating a new directory
-        createDirectory(DIR_PATH);
-
-        // creating some files in directory
-        for (int i = 1; i <= 10; i++) {
-            createFile(BASE_FILE_PATH + i + ".txt");
+    // method to write data to the file
+    public static void writeToFile(String filePath, String data) {
+        if (checkIfExists(filePath)) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+                writer.write(data);
+                writer.newLine();
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+                exception.printStackTrace();
+            }
+        } else {
+            System.out.println("File " + filePath + " does not exist.");
         }
+    }
 
-        // deleting some files from directory
-        for (int i = 6; i <= 10; i++) {
-            deleteFile(BASE_FILE_PATH + i + ".txt");
+    // method to count number of lines in a file
+    public static int countLines(String filePath) {
+        if (checkIfExists(filePath)) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                int count = 0;
+                while (reader.readLine() != null) {
+                    count++;
+                }
+                return count;
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+                exception.printStackTrace();
+                return -1;
+            }
         }
-
-        // checking if files exists or not
-        for (int i = 1; i <= 10; i++) {
-            System.out.println("File" + i + ".txt: " + checkIfExists(BASE_FILE_PATH + i + ".txt"));
-        }
-
-        // listing all files in a directory
-        listFiles(DIR_PATH);
-
-        // creating dummy files in dir folder
-        for (int i = 1; i <= 5; i++) {
-            createFile(DIR_PATH + "/temp" + i);
-        }
-
-        // listing all files with .txt extension
-        listFilesWithExtension(DIR_PATH, ".txt");
-
+        System.out.println("File " + filePath + " does not exist");
+        return -1;
     }
 
     // method to check if file exists or not

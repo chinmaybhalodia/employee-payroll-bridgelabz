@@ -5,20 +5,38 @@ import java.util.Scanner;
 
 public class EmpPayrollService {
     private ArrayList<Employee> employees;
+    private String filePath;
 
     public EmpPayrollService() {
         this.employees = new ArrayList<>();
+    }
+
+    // employee payroll constructor with file I/O
+    public EmpPayrollService(String filePath) {
+        this.filePath = filePath;
+        FileOperations.createFile(filePath);
+    }
+
+    public String getFilePath() {
+        return this.filePath;
     }
 
     public ArrayList<Employee> getEmployees() {
         return this.employees;
     }
 
-    public boolean addEmployee(Employee employee) {
-        return this.employees.add(employee);
+    // method to add new employee to the file
+    public void addEmployeeToFile(Employee employee) {
+        FileOperations.writeToFile(filePath, employee.toString());
     }
 
-    public void readEmpData(Scanner inputReader) {
+    // method to count number of empl oyees in file
+    public int countEmployeesInFile() {
+        return FileOperations.countLines(this.filePath);
+    }
+
+    // method to add employee from console to employees list
+    public void addEmployeeConsole(Scanner inputReader) {
         System.out.print("\nEnter employee Id: ");
         int id = inputReader.nextInt();
         inputReader.nextLine();
@@ -30,10 +48,11 @@ public class EmpPayrollService {
         double salary = inputReader.nextDouble();
         inputReader.nextLine();
 
-        this.addEmployee(new Employee(id, name, salary));
+        this.employees.add(new Employee(id, name, salary));
         System.out.println("Employee has been added successfully.\n");
     }
 
+    // method to print all employees in employees list
     @Override
     public String toString() {
         String data = "";
