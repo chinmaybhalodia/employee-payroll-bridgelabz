@@ -26,6 +26,26 @@ public class FileOperations {
         }
     }
 
+    // method to read data from file and return as String
+    public static String readFromFile(String filePath) {
+        if (checkIfExists(filePath)) {
+            StringBuilder content = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                return content.toString();
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+                exception.printStackTrace();
+                return null;
+            }
+        }
+        System.out.println("File " + filePath + " does not exist");
+        return null;
+    }
+
     // method to count number of lines in a file
     public static int countLines(String filePath) {
         if (checkIfExists(filePath)) {

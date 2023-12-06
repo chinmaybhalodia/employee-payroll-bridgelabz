@@ -16,5 +16,9 @@ public class Main {
         // adding one more employee and then counting entries
         empPayrollService.addEmployeeToFile(new Employee(2, "Person1", 20000));
         System.out.println(empPayrollService.countEmployeesInFile());
+
+        // printing all the employee data from the file
+        System.out.println("Employee Payroll Data: ");
+        empPayrollService.printEmployeesFromFile();
     }
 }

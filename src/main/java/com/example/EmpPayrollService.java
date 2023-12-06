@@ -35,6 +35,11 @@ public class EmpPayrollService {
         return FileOperations.countLines(this.filePath);
     }
 
+    // method to print employees from file
+    public void printEmployeesFromFile(){
+        System.out.println(FileOperations.readFromFile(this.filePath));
+    }
+
     // method to add employee from console to employees list
     public void addEmployeeConsole(Scanner inputReader) {
         System.out.print("\nEnter employee Id: ");
