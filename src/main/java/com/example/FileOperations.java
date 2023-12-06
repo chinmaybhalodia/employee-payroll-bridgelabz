@@ -1,6 +1,7 @@
 package com.example;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -26,21 +27,25 @@ public class FileOperations {
         }
     }
 
-    // method to read data from file and return as String
-    public static String readFromFile(String filePath) {
+    // method to read and store data in LinkedList
+    public static ArrayList<Employee> readFromFile(String filePath) {
         if (checkIfExists(filePath)) {
-            StringBuilder content = new StringBuilder();
+            ArrayList<Employee> data = new ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    content.append(line).append("\n");
+                    String[] parts = line.split(",");
+                    if (parts.length == 3) {
+                        int id = Integer.parseInt(parts[0]);
+                        String name = parts[1];
+                        double salary = Double.parseDouble(parts[2]);
+                        data.add(new Employee(id, name, salary));
+                    }
                 }
-                return content.toString();
             } catch (IOException exception) {
-                System.out.println(exception.getMessage());
                 exception.printStackTrace();
-                return null;
             }
+            return data;
         }
         System.out.println("File " + filePath + " does not exist");
         return null;

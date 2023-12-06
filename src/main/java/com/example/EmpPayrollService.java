@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class EmpPayrollService {
@@ -36,8 +37,39 @@ public class EmpPayrollService {
     }
 
     // method to print employees from file
-    public void printEmployeesFromFile(){
-        System.out.println(FileOperations.readFromFile(this.filePath));
+    public void printEmployeesFromFile() {
+        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
+        for (Employee employee : empList) {
+            System.out.println(employee);
+        }
+    }
+
+    // method to print employees after sorting them by salary
+    public ArrayList<Employee> sortBySalary() {
+        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
+        empList.sort(Comparator.comparing(Employee::getSalary));
+        return empList;
+    }
+
+    // method to print employees after sorting them by Id
+    public ArrayList<Employee> sortByID() {
+        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
+        empList.sort(Comparator.comparing(Employee::getId));
+        return empList;
+    }
+
+    // method to print employees after sorting them by Name
+    public ArrayList<Employee> sortByName() {
+        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
+        empList.sort(Comparator.comparing(Employee::getName));
+        return empList;
+    }
+
+    // method to check employees with salaries greater than given input
+    public ArrayList<Employee> getSalaryGreaterThan(double salary) {
+        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
+        empList.removeIf(employee -> employee.getSalary() < salary);
+        return empList;
     }
 
     // method to add employee from console to employees list
