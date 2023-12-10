@@ -18,6 +18,11 @@ public class EmpPayrollService {
         FileOperations.createFile(filePath);
     }
 
+    // connecting to the database
+    public void connectDatabase() {
+        DBOperations.getConnection();
+    }
+
     public String getFilePath() {
         return this.filePath;
     }

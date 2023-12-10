@@ -6,3 +6,6 @@
 
 # ignore readme file
 README.md
+
+# ignore Details file with passwords
+Details.java
