@@ -55,11 +55,13 @@ public class DBOperations {
 
     // method to update salary of particular entry
     public static void update(int salary, String name) {
-        String sqlQuery = "update employee_payroll set salary = " + salary + " where name = \"" + name + "\";";
+        String sqlQuery = "update employee_payroll set salary = ? where name = ?;";
         try (
                 Connection connection = getConnection();
-                Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sqlQuery);
+                PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setInt(1, salary);
+            statement.setString(2, name);
+            statement.executeUpdate();
             System.out.println("Updated the entry successfully!");
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
