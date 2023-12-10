@@ -27,5 +27,13 @@ public class Main {
         for (String str : emp_by_start_date) {
             System.out.println(str);
         }
+
+        // getting salary statistics by gender
+        System.out.println("\nSalary statistics by gender are: ");
+        ArrayList<String> salary_stats = empPayrollService.getStatsByGenderFromDB(
+                "select gender, sum(salary), min(salary), max(salary), avg(salary) from employee_payroll group by gender; ");
+        for (String str : salary_stats) {
+            System.out.println(str);
+        }
     }
 }

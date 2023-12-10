@@ -86,4 +86,26 @@ public class DBOperations {
         }
         return data;
     }
+
+    // method to get salary stats by gender
+    public static ArrayList<String> getStatsByGender(String sqlQuery) {
+        ArrayList<String> data = new ArrayList<>();
+        try (
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sqlQuery);) {
+            while (resultSet.next()) {
+                String gender = resultSet.getString("gender");
+                double sum = resultSet.getDouble("sum(salary)");
+                double min = resultSet.getDouble("min(salary)");
+                double max = resultSet.getDouble("max(salary)");
+                double avg = resultSet.getDouble("avg(salary)");
+                data.add(gender + ", " + sum + ", " + min + ", " + max + ", " + avg);
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+            exception.printStackTrace();
+        }
+        return data;
+    }
 }

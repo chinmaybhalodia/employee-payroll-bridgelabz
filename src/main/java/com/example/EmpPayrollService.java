@@ -38,6 +38,11 @@ public class EmpPayrollService {
         return DBOperations.getData(query);
     }
 
+    // method to get salary stats by gender
+    public ArrayList<String> getStatsByGenderFromDB(String query) {
+        return DBOperations.getStatsByGender(query);
+    }
+
     public String getFilePath() {
         return this.filePath;
     }
