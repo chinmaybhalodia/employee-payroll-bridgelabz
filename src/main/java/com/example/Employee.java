@@ -86,6 +86,16 @@ public class Employee {
 
     @Override
     public String toString() {
-        return this.id + "," + this.name + "," + this.salary;
+        return this.id + ", "
+                + this.name + ", "
+                + this.start_date + ", "
+                + this.gender + ", "
+                + this.phone + ", "
+                + this.address + ", "
+                + this.salary + ", "
+                + this.deductions + ", "
+                + this.taxable_pay + ", "
+                + this.income_tax + ", "
+                + this.department;
     }
 }

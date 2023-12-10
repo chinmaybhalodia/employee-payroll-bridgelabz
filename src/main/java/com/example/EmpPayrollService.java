@@ -23,6 +23,11 @@ public class EmpPayrollService {
         DBOperations.getConnection();
     }
 
+    // method to get all employee data from database
+    public ArrayList<Employee> getEmployeesFromDB() {
+        return DBOperations.readEmployees();
+    }
+
     public String getFilePath() {
         return this.filePath;
     }

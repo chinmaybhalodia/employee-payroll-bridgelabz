@@ -253,4 +253,3 @@ select gender, count(gender) from employee_payroll group by gender;
 -- output to above query
 -- male	3
 -- female	2
- 
