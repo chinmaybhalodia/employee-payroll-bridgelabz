@@ -30,7 +30,12 @@ public class EmpPayrollService {
 
     // method to update salary in database
     public void updateSalaryInDB(int salary, String name) {
-        DBOperations.update(salary, name);
+        DBOperations.updateSalary(salary, name);
+    }
+
+    // method to allow custom query execution
+    public ArrayList<String> getQueryDataFromDB(String query) {
+        return DBOperations.getData(query);
     }
 
     public String getFilePath() {

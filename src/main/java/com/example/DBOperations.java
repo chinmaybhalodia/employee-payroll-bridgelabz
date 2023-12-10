@@ -10,7 +10,6 @@ public class DBOperations {
         Connection connection;
         try {
             connection = DriverManager.getConnection(Details.URL, Details.USER, Details.PASSWORD);
-            System.out.println("Connected to the database!");
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
             exception.printStackTrace();
@@ -54,7 +53,7 @@ public class DBOperations {
     }
 
     // method to update salary of particular entry
-    public static void update(int salary, String name) {
+    public static void updateSalary(int salary, String name) {
         String sqlQuery = "update employee_payroll set salary = ? where name = ?;";
         try (
                 Connection connection = getConnection();
@@ -67,5 +66,24 @@ public class DBOperations {
             System.out.println(exception.getMessage());
             exception.printStackTrace();
         }
+    }
+
+    // method to execute custom query to fetch data
+    public static ArrayList<String> getData(String sqlQuery) {
+        ArrayList<String> data = new ArrayList<>();
+        try (
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String start_date = resultSet.getString("start_date");
+                data.add(name + ", " + start_date);
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+            exception.printStackTrace();
+        }
+        return data;
     }
 }
