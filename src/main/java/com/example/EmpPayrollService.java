@@ -28,6 +28,11 @@ public class EmpPayrollService {
         return DBOperations.readEmployees();
     }
 
+    // method to update salary in database
+    public void updateSalaryInDB(int salary, String name) {
+        DBOperations.update(salary, name);
+    }
+
     public String getFilePath() {
         return this.filePath;
     }

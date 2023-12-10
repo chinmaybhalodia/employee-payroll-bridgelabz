@@ -19,12 +19,13 @@ public class DBOperations {
         return connection;
     }
 
-    // reading all the data fr om the database
+    // reading all the data from the database
     public static ArrayList<Employee> readEmployees() {
         ArrayList<Employee> employeeList = new ArrayList<>();
         String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, ep.deductions, ep.taxable_pay, ep.income_tax, ep.net_pay, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id;";
 
-        try (Connection connection = getConnection();
+        try (
+                Connection connection = getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             while (resultSet.next()) {
@@ -50,5 +51,19 @@ public class DBOperations {
             exception.printStackTrace();
         }
         return employeeList;
+    }
+
+    // method to update salary of particular entry
+    public static void update(int salary, String name) {
+        String sqlQuery = "update employee_payroll set salary = " + salary + " where name = \"" + name + "\";";
+        try (
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sqlQuery);
+            System.out.println("Updated the entry successfully!");
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+            exception.printStackTrace();
+        }
     }
 }

@@ -16,5 +16,8 @@ public class Main {
         for (Employee employee : employees) {
             System.out.println(employee);
         }
+
+        // updating salary of Terissa to 3000000
+        empPayrollService.updateSalaryInDB(3000000, "Terissa");
     }
 }
