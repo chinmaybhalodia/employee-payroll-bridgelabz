@@ -291,3 +291,18 @@ select * from employee_payroll;
 -- 4	Dave	25000	2023-11-01	male	91 9456785612	block-204
 -- 7	Terissa	3000000	2023-12-08	female	91 9456314785	block-405
 -- 8	Mary	50000	2023-12-10	female	91 9456784236	block-608
+
+-- JDBC UC12
+-- adding field is_active for employee_payroll
+alter table employee_payroll add column is_active boolean default true;
+select * from employee_payroll;
+
+-- output to the above query
+-- 1	Bill	10000	2022-10-11	male	91 9456713547	block-201	1
+-- 2	Alice	20000	2023-05-09	female	91 9456712345	block-304	1
+-- 3	Charlie	35000	2023-01-01	male	91 9456123475	block-503	1
+-- 4	Dave	25000	2023-11-01	male	91 9456785612	block-204	1
+-- 7	Terissa	40000	2023-12-08	female	91 9456314785	block-405	1
+-- 8	Mary	50000	2023-12-10	female	91 9456784236	block-608	1
+-- 9	Mark	50000	2023-12-01	male	91 9457635412	block-507	1
+-- 11	Henry	40000	2023-06-01	male	91 9456783547	block-309	1

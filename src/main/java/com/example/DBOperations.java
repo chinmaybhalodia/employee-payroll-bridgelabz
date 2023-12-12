@@ -21,7 +21,7 @@ public class DBOperations {
     // reading all the data from the database
     public static ArrayList<Employee> readEmployees() {
         ArrayList<Employee> employeeList = new ArrayList<>();
-        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id;";
+        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id where is_active = true;";
 
         try (
                 Connection connection = getConnection();
@@ -145,6 +145,21 @@ public class DBOperations {
         }
     }
 
+    // method to remove the employee
+    public static void removeEmployee(String name) {
+        String sqlQuery = "update employee_payroll set is_active = false where name = ?;";
+        try (
+                Connection connection = getConnection();
+                PreparedStatement statement = connection.prepareStatement(sqlQuery);) {
+            statement.setString(1, name);
+            statement.executeUpdate();
+            System.out.println("Employee removed successfully!\n");
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+            exception.printStackTrace();
+        }
+    }
+
     // method to update salary of particular entry
     public static void updateSalary(double salary, String name) {
         String sqlUpdateSalary = "update employee_payroll set salary = ? where name = ?;";
@@ -214,7 +229,7 @@ public class DBOperations {
     // method to get employee data in date range
     public static ArrayList<Employee> getInDataRange(String range_start_date, String range_end_date) {
         ArrayList<Employee> employeeList = new ArrayList<>();
-        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id where start_date between cast(? as date) and cast(? as date);";
+        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id where start_date between cast(? as date) and cast(? as date) and is_active = true;";
 
         try (
                 Connection connection = getConnection();
@@ -261,7 +276,7 @@ public class DBOperations {
     // method to get salary stats by gender
     public static ArrayList<String> getStatsByGender() {
         ArrayList<String> data = new ArrayList<>();
-        String sqlQuery = "select gender, sum(salary), min(salary), max(salary), avg(salary) from employee_payroll group by gender;";
+        String sqlQuery = "select gender, sum(salary), min(salary), max(salary), avg(salary) from employee_payroll where is_active = true group by gender;";
         try (
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement();

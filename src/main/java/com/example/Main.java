@@ -14,9 +14,10 @@ public class Main {
             System.out.println("What opration do you want to perform?");
             System.out.println("[1] Print all employees details");
             System.out.println("[2] Add new employee");
-            System.out.println("[3] Print employees joining in date range");
-            System.out.println("[4] Update employee salary");
-            System.out.println("[5] View employee details by gender");
+            System.out.println("[3] Remove employee");
+            System.out.println("[4] Print employees joining in date range");
+            System.out.println("[5] Update employee salary");
+            System.out.println("[6] View employee details by gender");
             System.out.print("Enter your choice (enter 0 to exit): ");
             int choice = inputReader.nextInt();
             inputReader.nextLine();
@@ -40,6 +41,12 @@ public class Main {
                     break;
 
                 case 3:
+                    System.out.print("Enter employee name: ");
+                    String emp_name = inputReader.nextLine();
+                    empPayrollService.removeEmployee(emp_name);
+                    break;
+
+                case 4:
                     System.out.print("Enter start date (YYYY-MM-DD): ");
                     String start_date = inputReader.nextLine();
 
@@ -55,7 +62,7 @@ public class Main {
                     }
                     break;
 
-                case 4:
+                case 5:
                     System.out.print("Enter employee name: ");
                     String name = inputReader.nextLine();
 
@@ -65,11 +72,16 @@ public class Main {
                     empPayrollService.updateSalaryInDB(salary, name);
                     break;
 
-                case 5:
+                case 6:
                     System.out.println("\nSalary statistics by gender are: ");
                     ArrayList<String> salary_stats = empPayrollService.getStatsByGenderFromDB();
                     for (String str : salary_stats) {
-                        System.out.println(str);
+                        String[] details = str.split(", ");
+                        System.out.println("Gender: " + details[0]);
+                        System.out.println("Total Salary: " + details[1]);
+                        System.out.println("Minimum Salary: " + details[2]);
+                        System.out.println("Maximum Salary: " + details[3]);
+                        System.out.println("Average Salary: " + details[4] + "\n");
                     }
                     break;
 
