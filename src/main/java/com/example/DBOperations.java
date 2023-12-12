@@ -147,17 +147,67 @@ public class DBOperations {
 
     // method to update salary of particular entry
     public static void updateSalary(double salary, String name) {
-        String sqlQuery = "update employee_payroll set salary = ? where name = ?;";
-        try (
-                Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setDouble(1, salary);
-            statement.setString(2, name);
-            statement.executeUpdate();
-            System.out.println("Updated the entry successfully!");
+        String sqlUpdateSalary = "update employee_payroll set salary = ? where name = ?;";
+        String sqlSelectEmpId = "select emp_id from employee_payroll where name = ?";
+        String sqlUpdatePayrollDetails = "update payroll_details set deduction = ?, taxable_pay = ?, income_tax = ?, net_pay = ? where emp_id = ?;";
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+
+            // updating salary in employee_payroll
+            PreparedStatement updateSalary = connection.prepareStatement(sqlUpdateSalary);
+            updateSalary.setDouble(1, salary);
+            updateSalary.setString(2, name);
+            updateSalary.executeUpdate();
+
+            int emp_id;
+            // getting emp_id from employee_update
+            PreparedStatement selectEmpID = connection.prepareStatement(sqlSelectEmpId);
+            selectEmpID.setString(1, name);
+            ResultSet resultSet = selectEmpID.executeQuery();
+            if (resultSet.next()) {
+                emp_id = resultSet.getInt("emp_id");
+            } else {
+                throw new SQLException("Employee not found.");
+            }
+
+            // calculate payroll details
+            double deduction = salary * 0.2;
+            double taxable_pay = salary - deduction;
+            double income_tax = salary * 0.1;
+            double net_pay = salary - income_tax;
+
+            // updating the payroll_details table
+            PreparedStatement updatePayrollDetails = connection.prepareStatement(sqlUpdatePayrollDetails);
+            updatePayrollDetails.setDouble(1, deduction);
+            updatePayrollDetails.setDouble(2, taxable_pay);
+            updatePayrollDetails.setDouble(3, income_tax);
+            updatePayrollDetails.setDouble(4, net_pay);
+            updatePayrollDetails.setInt(5, emp_id);
+            updatePayrollDetails.executeUpdate();
+
+            connection.commit();
+            System.out.println("Updated the entry successfully!\n");
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
             exception.printStackTrace();
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
@@ -199,9 +249,7 @@ public class DBOperations {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             while (resultSet.next()) {
-                String name = resultSet.getString("name");
-                String start_date = resultSet.getString("start_date");
-                data.add(name + ", " + start_date);
+                data.add(resultSet.toString());
             }
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
