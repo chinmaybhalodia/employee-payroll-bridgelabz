@@ -1,7 +1,6 @@
 package com.example;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -27,29 +26,29 @@ public class FileOperations {
         }
     }
 
-    // method to read and store data in LinkedList
-    public static ArrayList<Employee> readFromFile(String filePath) {
-        if (checkIfExists(filePath)) {
-            ArrayList<Employee> data = new ArrayList<>();
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 3) {
-                        int id = Integer.parseInt(parts[0]);
-                        String name = parts[1];
-                        double salary = Double.parseDouble(parts[2]);
-                        data.add(new Employee(id, name, salary));
-                    }
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-            return data;
-        }
-        System.out.println("File " + filePath + " does not exist");
-        return null;
-    }
+    // // method to read and store data in LinkedList
+    // public static ArrayList<Employee> readFromFile(String filePath) {
+    // if (checkIfExists(filePath)) {
+    // ArrayList<Employee> data = new ArrayList<>();
+    // try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    // String line;
+    // while ((line = reader.readLine()) != null) {
+    // String[] parts = line.split(",");
+    // if (parts.length == 3) {
+    // int id = Integer.parseInt(parts[0]);
+    // String name = parts[1];
+    // double salary = Double.parseDouble(parts[2]);
+    // data.add(new Employee(id, name, salary));
+    // }
+    // }
+    // } catch (IOException exception) {
+    // exception.printStackTrace();
+    // }
+    // return data;
+    // }
+    // System.out.println("File " + filePath + " does not exist");
+    // return null;
+    // }
 
     // method to count number of lines in a file
     public static int countLines(String filePath) {

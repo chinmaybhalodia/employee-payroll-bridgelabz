@@ -1,39 +1,81 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to Employee Payroll Service.");
 
         EmpPayrollService empPayrollService = new EmpPayrollService();
+        Scanner inputReader = new Scanner(System.in);
 
-        // connecting to the database
-        empPayrollService.connectDatabase();
+        while (true) {
+            System.out.println("What opration do you want to perform?");
+            System.out.println("[1] Print all employees details");
+            System.out.println("[2] Add new employee");
+            System.out.println("[3] Print employees joining in date range");
+            System.out.println("[4] Update employee salary");
+            System.out.println("[5] View employee details by gender");
+            System.out.print("Enter your choice (enter 0 to exit): ");
+            int choice = inputReader.nextInt();
+            inputReader.nextLine();
 
-        // reading data of all the employees in the database
-        ArrayList<Employee> employees = empPayrollService.getEmployeesFromDB();
-        for (Employee employee : employees) {
-            System.out.println(employee);
-        }
+            switch (choice) {
+                case 0:
+                    inputReader.close();
+                    return;
 
-        // updating salary of Terissa to 3000000
-        empPayrollService.updateSalaryInDB(3000000, "Terissa");
+                case 1:
+                    ArrayList<Employee> employees = empPayrollService.getEmployeesFromDB();
+                    int i1 = 1;
+                    for (Employee employee : employees) {
+                        System.out.println(i1 + ")\n" + employee + "\n");
+                        i1++;
+                    }
+                    break;
 
-        // getting all employees joining between the given dates
-        System.out.println("\nEmployees joining after 2023-1-1 are: ");
-        ArrayList<String> emp_by_start_date = empPayrollService.getQueryDataFromDB(
-                "select name, start_date from employee_payroll where start_date between cast(\"2023-1-1\" as date) and date(now());");
-        for (String str : emp_by_start_date) {
-            System.out.println(str);
-        }
+                case 2:
+                    empPayrollService.addEmployeeConsole(inputReader);
+                    break;
 
-        // getting salary statistics by gender
-        System.out.println("\nSalary statistics by gender are: ");
-        ArrayList<String> salary_stats = empPayrollService.getStatsByGenderFromDB(
-                "select gender, sum(salary), min(salary), max(salary), avg(salary) from employee_payroll group by gender; ");
-        for (String str : salary_stats) {
-            System.out.println(str);
+                case 3:
+                    System.out.print("Enter start date (YYYY-MM-DD): ");
+                    String start_date = inputReader.nextLine();
+
+                    System.out.print("Enter end date (YYYY-MM-DD): ");
+                    String end_date = inputReader.nextLine();
+
+                    System.out.println("\nEmployees joining between" + start_date + " and " + end_date + " are: ");
+                    ArrayList<Employee> emp_in_range = empPayrollService.getInDateRange(start_date, end_date);
+                    int i2 = 1;
+                    for (Employee employee : emp_in_range) {
+                        System.out.println(i2 + ")\n" + employee + "\n");
+                        i2++;
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Enter employee name: ");
+                    String name = inputReader.nextLine();
+
+                    System.out.print("Enter updated salary: ");
+                    double salary = inputReader.nextDouble();
+                    inputReader.nextLine();
+                    empPayrollService.updateSalaryInDB(salary, name);
+                    break;
+
+                case 5:
+                    System.out.println("\nSalary statistics by gender are: ");
+                    ArrayList<String> salary_stats = empPayrollService.getStatsByGenderFromDB();
+                    for (String str : salary_stats) {
+                        System.out.println(str);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

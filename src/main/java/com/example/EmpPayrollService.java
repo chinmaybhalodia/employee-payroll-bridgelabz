@@ -1,7 +1,6 @@
 package com.example;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class EmpPayrollService {
@@ -10,6 +9,8 @@ public class EmpPayrollService {
 
     public EmpPayrollService() {
         this.employees = new ArrayList<>();
+        // connecting to the database
+        this.connectDatabase();
     }
 
     // employee payroll constructor with file I/O
@@ -17,6 +18,8 @@ public class EmpPayrollService {
         this.filePath = filePath;
         FileOperations.createFile(filePath);
     }
+
+    // DATABASE FUNCTIONS
 
     // connecting to the database
     public void connectDatabase() {
@@ -29,8 +32,13 @@ public class EmpPayrollService {
     }
 
     // method to update salary in database
-    public void updateSalaryInDB(int salary, String name) {
+    public void updateSalaryInDB(double salary, String name) {
         DBOperations.updateSalary(salary, name);
+    }
+
+    // method to get employees between date range
+    public ArrayList<Employee> getInDateRange(String start_date, String end_date) {
+        return DBOperations.getInDataRange(start_date, end_date);
     }
 
     // method to allow custom query execution
@@ -39,9 +47,11 @@ public class EmpPayrollService {
     }
 
     // method to get salary stats by gender
-    public ArrayList<String> getStatsByGenderFromDB(String query) {
-        return DBOperations.getStatsByGender(query);
+    public ArrayList<String> getStatsByGenderFromDB() {
+        return DBOperations.getStatsByGender();
     }
+
+    // FILE IO FUNCTIONS
 
     public String getFilePath() {
         return this.filePath;
@@ -53,65 +63,58 @@ public class EmpPayrollService {
 
     // method to add new employee to the file
     public void addEmployeeToFile(Employee employee) {
-        FileOperations.writeToFile(filePath, employee.toString());
+        FileOperations.writeToFile(filePath, employee.toCSVString());
     }
 
-    // method to count number of empl oyees in file
+    // method to count number of employees in file
     public int countEmployeesInFile() {
         return FileOperations.countLines(this.filePath);
     }
 
-    // method to print employees from file
-    public void printEmployeesFromFile() {
-        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
-        for (Employee employee : empList) {
-            System.out.println(employee);
-        }
-    }
-
-    // method to print employees after sorting them by salary
-    public ArrayList<Employee> sortBySalary() {
-        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
-        empList.sort(Comparator.comparing(Employee::getSalary));
-        return empList;
-    }
-
-    // method to print employees after sorting them by Id
-    public ArrayList<Employee> sortByID() {
-        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
-        empList.sort(Comparator.comparing(Employee::getId));
-        return empList;
-    }
-
-    // method to print employees after sorting them by Name
-    public ArrayList<Employee> sortByName() {
-        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
-        empList.sort(Comparator.comparing(Employee::getName));
-        return empList;
-    }
-
-    // method to check employees with salaries greater than given input
-    public ArrayList<Employee> getSalaryGreaterThan(double salary) {
-        ArrayList<Employee> empList = FileOperations.readFromFile(this.filePath);
-        empList.removeIf(employee -> employee.getSalary() < salary);
-        return empList;
-    }
-
     // method to add employee from console to employees list
     public void addEmployeeConsole(Scanner inputReader) {
-        System.out.print("\nEnter employee Id: ");
-        int id = inputReader.nextInt();
-        inputReader.nextLine();
-
         System.out.print("Enter employee Name: ");
         String name = inputReader.nextLine();
+
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        String start_date = inputReader.nextLine();
+
+        System.out.print("Enter employee gender: ");
+        String gender = inputReader.nextLine();
+
+        System.out.print("Enter employee phone number: ");
+        String phone = inputReader.nextLine();
+
+        System.out.print("Enter employee address: ");
+        String address = inputReader.nextLine();
 
         System.out.print("Enter employee Salary: ");
         double salary = inputReader.nextDouble();
         inputReader.nextLine();
 
-        this.employees.add(new Employee(id, name, salary));
-        System.out.println("Employee has been added successfully.\n");
+        System.out.print("Enter salary deductions: ");
+        double deductions = inputReader.nextDouble();
+        inputReader.nextLine();
+
+        System.out.print("Enter taxable pay: ");
+        double taxable_pay = inputReader.nextDouble();
+        inputReader.nextLine();
+
+        System.out.print("Enter income tax: ");
+        double income_tax = inputReader.nextDouble();
+        inputReader.nextLine();
+
+        System.out.print("Enter net pay: ");
+        double net_pay = inputReader.nextDouble();
+        inputReader.nextLine();
+
+        System.out.print("Enter employee department: ");
+        String department = inputReader.nextLine();
+
+        Employee employee = new Employee(name, start_date, gender, phone, address, salary, deductions, taxable_pay,
+                income_tax, net_pay, department);
+
+        DBOperations.addEmployee(employee);
     }
 
     // method to print all employees in employees list
