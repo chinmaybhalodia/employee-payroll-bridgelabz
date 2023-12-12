@@ -21,7 +21,7 @@ public class DBOperations {
     // reading all the data from the database
     public static ArrayList<Employee> readEmployees() {
         ArrayList<Employee> employeeList = new ArrayList<>();
-        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, ep.deductions, ep.taxable_pay, ep.income_tax, ep.net_pay, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id;";
+        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id;";
 
         try (
                 Connection connection = getConnection();
@@ -164,7 +164,7 @@ public class DBOperations {
     // method to get employee data in date range
     public static ArrayList<Employee> getInDataRange(String range_start_date, String range_end_date) {
         ArrayList<Employee> employeeList = new ArrayList<>();
-        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, ep.deductions, ep.taxable_pay, ep.income_tax, ep.net_pay, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id where start_date between cast(? as date) and cast(? as date);";
+        String sqlQuery = "select ep.emp_id, ep.name, ep.salary, ep.start_date, ep.gender, ep.phone, ep.address, dep.department from employee_payroll ep inner join employee_departments ed on ep.emp_id = ed.emp_id inner join departments dep on ed.dep_id = dep.dep_id where start_date between cast(? as date) and cast(? as date);";
 
         try (
                 Connection connection = getConnection();
