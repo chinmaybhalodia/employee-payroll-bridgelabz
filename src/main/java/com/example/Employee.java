@@ -14,17 +14,17 @@ public class Employee {
     private String department;
 
     public Employee(String name, String start_date, String gender, String phone, String address, double salary,
-            double deductions, double taxable_pay, double income_tax, double net_pay, String department) {
+            String department) {
         this.name = name;
         this.start_date = start_date;
         this.gender = gender;
         this.phone = phone;
         this.address = address;
         this.salary = salary;
-        this.deductions = deductions;
-        this.taxable_pay = taxable_pay;
-        this.income_tax = income_tax;
-        this.net_pay = net_pay;
+        this.deductions = this.salary * 0.2;
+        this.taxable_pay = this.salary - this.deductions;
+        this.income_tax = this.taxable_pay * 0.1;
+        this.net_pay = this.salary - this.income_tax;
         this.department = department;
     }
 

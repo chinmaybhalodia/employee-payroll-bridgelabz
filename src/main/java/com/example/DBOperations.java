@@ -34,14 +34,9 @@ public class DBOperations {
                 String phone = resultSet.getString("phone");
                 String address = resultSet.getString("address");
                 double salary = resultSet.getInt("salary");
-                double deductions = resultSet.getInt("deductions");
-                double taxable_pay = resultSet.getInt("taxable_pay");
-                double income_tax = resultSet.getInt("income_tax");
-                double net_pay = resultSet.getInt("net_pay");
                 String department = resultSet.getString("department");
 
-                Employee employee = new Employee(name, start_date, gender, phone, address, salary, deductions,
-                        taxable_pay, income_tax, net_pay, department);
+                Employee employee = new Employee(name, start_date, gender, phone, address, salary, department);
                 employeeList.add(employee);
             }
         } catch (SQLException exception) {
@@ -53,10 +48,11 @@ public class DBOperations {
 
     // method to add new employee to the database
     public static void addEmployee(Employee employee) {
-        String sqlQueryEmployeePayroll = "insert into employee_payroll (name, salary, start_date, gender, phone, address, deductions, taxable_pay, income_tax, net_pay) values (?, ?, cast(? as date), ?, ?, ?, ?, ?, ?, ?)";
-        String sqlQueryDepartmentCheck = "select dep_id from departments where department = ?";
-        String sqlQueryDepartmentInsert = "insert into departments (department) values (?)";
-        String sqlQueryEmployeeDepartments = "insert into employee_departments (emp_id, dep_id) values (?, ?)";
+        String sqlQueryEmployeePayroll = "insert into employee_payroll (name, salary, start_date, gender, phone, address) values (?, ?, cast(? as date), ?, ?, ?);";
+        String sqlQueryPayrollDetails = "insert into payroll_details (emp_id, deduction, taxable_pay, income_tax, net_pay) values (?, ?, ?, ?, ?);";
+        String sqlQueryDepartmentCheck = "select dep_id from departments where department = ?;";
+        String sqlQueryDepartmentInsert = "insert into departments (department) values (?);";
+        String sqlQueryEmployeeDepartments = "insert into employee_departments (emp_id, dep_id) values (?, ?);";
         Connection connection = null;
 
         try {
@@ -72,10 +68,6 @@ public class DBOperations {
             addEmployeePayroll.setString(4, employee.getGender());
             addEmployeePayroll.setString(5, employee.getPhone());
             addEmployeePayroll.setString(6, employee.getAddress());
-            addEmployeePayroll.setDouble(7, employee.getSalary());
-            addEmployeePayroll.setDouble(8, employee.getTaxablePay());
-            addEmployeePayroll.setDouble(9, employee.getIncomeTax());
-            addEmployeePayroll.setDouble(10, employee.getNetPay());
             addEmployeePayroll.executeUpdate();
 
             // Retrieve the auto-generated emp_id
@@ -87,6 +79,16 @@ public class DBOperations {
                     throw new SQLException("Creating record failed, no ID obtained.");
                 }
             }
+
+            // insert into payroll_details
+            PreparedStatement addPayrollDetails = connection.prepareStatement(sqlQueryPayrollDetails,
+                    PreparedStatement.RETURN_GENERATED_KEYS);
+            addPayrollDetails.setInt(1, emp_id);
+            addPayrollDetails.setDouble(2, employee.getDeductions());
+            addPayrollDetails.setDouble(3, employee.getTaxablePay());
+            addPayrollDetails.setDouble(4, employee.getIncomeTax());
+            addPayrollDetails.setDouble(5, employee.getNetPay());
+            addPayrollDetails.executeUpdate();
 
             // Check if the department already exists
             PreparedStatement checkDepartment = connection.prepareStatement(sqlQueryDepartmentCheck);
@@ -177,14 +179,9 @@ public class DBOperations {
                 String phone = resultSet.getString("phone");
                 String address = resultSet.getString("address");
                 double salary = resultSet.getInt("salary");
-                double deductions = resultSet.getInt("deductions");
-                double taxable_pay = resultSet.getInt("taxable_pay");
-                double income_tax = resultSet.getInt("income_tax");
-                double net_pay = resultSet.getInt("net_pay");
                 String department = resultSet.getString("department");
 
-                Employee employee = new Employee(name, start_date, gender, phone, address, salary, deductions,
-                        taxable_pay, income_tax, net_pay, department);
+                Employee employee = new Employee(name, start_date, gender, phone, address, salary, department);
                 employeeList.add(employee);
             }
         } catch (SQLException exception) {

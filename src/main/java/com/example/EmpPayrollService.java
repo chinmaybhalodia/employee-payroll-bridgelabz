@@ -92,27 +92,10 @@ public class EmpPayrollService {
         double salary = inputReader.nextDouble();
         inputReader.nextLine();
 
-        System.out.print("Enter salary deductions: ");
-        double deductions = inputReader.nextDouble();
-        inputReader.nextLine();
-
-        System.out.print("Enter taxable pay: ");
-        double taxable_pay = inputReader.nextDouble();
-        inputReader.nextLine();
-
-        System.out.print("Enter income tax: ");
-        double income_tax = inputReader.nextDouble();
-        inputReader.nextLine();
-
-        System.out.print("Enter net pay: ");
-        double net_pay = inputReader.nextDouble();
-        inputReader.nextLine();
-
         System.out.print("Enter employee department: ");
         String department = inputReader.nextLine();
 
-        Employee employee = new Employee(name, start_date, gender, phone, address, salary, deductions, taxable_pay,
-                income_tax, net_pay, department);
+        Employee employee = new Employee(name, start_date, gender, phone, address, salary, department);
 
         DBOperations.addEmployee(employee);
     }

@@ -253,3 +253,41 @@ select gender, count(gender) from employee_payroll group by gender;
 -- output to above query
 -- male	3
 -- female	2
+
+-- JDBC UC8
+-- creating employee_payroll table
+create table payroll_details(
+	payroll_id int not null auto_increment,
+    emp_id int not null,
+    deduction double,
+    taxable_pay double,
+    income_tax double,
+    net_pay double,
+    primary key(payroll_id),
+    foreign key(emp_id) references employee_payroll(emp_id) on delete cascade
+);
+
+-- migrating data from employee_payroll to payroll_details
+insert into payroll_details(emp_id, deduction, taxable_pay, income_tax, net_pay) 
+	select emp_id, deductions, taxable_pay, income_tax, net_pay from employee_payroll;
+    
+select * from payroll_details;
+
+-- output to above query
+-- 1	1	2000	1000	200		8000
+-- 2	2	3000	1500	500		17000
+-- 3	3	5000	3000	1000	30000
+-- 4	4	3000	1500	500		22000
+-- 5	7	5000	3000	1000	35000
+-- 6	8	50000	3000	1000	45000
+
+alter table employee_payroll drop column deductions, drop column taxable_pay, drop column income_tax, drop column net_pay;
+select * from employee_payroll;
+
+-- output to above query
+-- 1	Bill	10000	2022-10-11	male	91 9456713547	block-201
+-- 2	Alice	20000	2023-05-09	female	91 9456712345	block-304
+-- 3	Charlie	35000	2023-01-01	male	91 9456123475	block-503
+-- 4	Dave	25000	2023-11-01	male	91 9456785612	block-204
+-- 7	Terissa	3000000	2023-12-08	female	91 9456314785	block-405
+-- 8	Mary	50000	2023-12-10	female	91 9456784236	block-608
